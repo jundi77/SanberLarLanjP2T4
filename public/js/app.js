@@ -26,7 +26,7 @@ const app = new Vue({
         doneAll: function() {
             let doneAll = true
             for (let i = 0; i < this.toDo.data.length; ++i) {
-                doneAll = this.toDo.data[i].done
+                doneAll &= this.toDo.data[i].done
             }
             return doneAll
         },
