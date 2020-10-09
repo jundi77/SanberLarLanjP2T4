@@ -41,6 +41,7 @@ const app = new Vue({
                     if (new_item.hasOwnProperty('id')) {
                         this.toDo.data.push(new_item)
                     }
+                    this.input = ''
                 },
                 response => {
                     console.log(response)
