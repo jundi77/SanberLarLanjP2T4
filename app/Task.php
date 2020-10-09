@@ -9,4 +9,8 @@ class Task extends Model
     protected $fillable = [
         'task', 'done'
     ];
+
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
 }

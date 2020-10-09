@@ -2,19 +2,26 @@ const app = new Vue({
     el: '#app',
     data: {
         toDo: {
-            data: [
-                {
-                    id: 0,
-                    task: "Mengisi air",
-                    done: true
-                },
-            ],
+            data: [],
         },
         input: '',
     },
     methods: {
-        check: function (index) {
-            console.log('check')
+        check: function (id) {
+            let index = this.toDo.data.findIndex(data => data.id === id)
+            this.$resource('/api/tasks/update').update(
+                {
+                    id: id,
+                    done: this.toDo.data[index].done
+                }
+            ).then(
+                response => {
+                    
+                },
+                response => {
+                    console.log(response)
+                }
+            )
         },
         doneAll: function() {
             let doneAll = true
@@ -24,27 +31,45 @@ const app = new Vue({
             return doneAll
         },
         addTask: function() {
-            /* ajax post
-             let new_task = ajax get
-            if new_task.hasOwnProperty('id') {
-                this.toDo.data.push(new_task)
-            }
-            */
+            this.$resource('/api/tasks/create').save(
+                {
+                    task: this.input
+                }
+            ).then(
+                response => {
+                    let new_item = response.body
+                    if (new_item.hasOwnProperty('id')) {
+                        this.toDo.data.push(new_item)
+                    }
+                },
+                response => {
+                    console.log(response)
+                }
+            )
+            
         },
         deleteTask: function (id_target) {
             if (confirm('Yakin dihapus?')) {
                 let index = this.toDo.data.findIndex(data => data.id === id_target)
                 if (index > -1) {
-                    // ajax delete
-                    console.log(this.toDo.data[index])
-                    this.toDo.data.splice(index)
+                    this.$resource('/api/tasks/delete').remove({id:id_target}).then(
+                        response => {
+                            response = response.body
+                            if (response.hasOwnProperty('status')){
+                                this.toDo.data = this.toDo.data.splice(index,1)
+                            }
+                        },
+                        response => {
+                            console.log(response)
+                        }
+                    )
                 }
             }
         },
         test: function () {
             this.$resource('/api/tasks').get().then(
                 response => {
-                    console.log(response)
+                    this.toDo.data.push(response.body)
                 }
             )
         }
@@ -52,7 +77,9 @@ const app = new Vue({
     created: function () {
         this.$resource('/api/tasks').get().then(
             response => {
-                console.log(response)
+                let items = response.body
+                for (let i = 0; i < items.length; ++i)
+                    this.toDo.data.push(items[i])
             }
         )
     }

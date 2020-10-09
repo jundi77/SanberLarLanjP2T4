@@ -61,9 +61,17 @@ class TaskController extends Controller
             'id' => 'required',
             'done' => 'required'
         ]);
-        Task::find(request('id'))->update([
-            'done' => request('done')
-        ]);
+        if ($task=Task::find(request('id'))){
+            if (request('id') == 'true') {
+                $done = true;
+            } else $done = false;
+            $task->update([
+                'done' => $done
+            ]);
+            return response()->json([
+                'status' => 'Update success.'
+            ]);
+        }
     }
 
     /**
@@ -77,6 +85,11 @@ class TaskController extends Controller
         $request->validate([
             'id' => 'required',
         ]);
-        Task::find(request('id'))->delete();
+        if( $task=Task::find(request('id'))){
+            $task->delete();
+            return response()->json([
+                'status' => 'Delete success.'
+            ]);
+        }
     }
 }

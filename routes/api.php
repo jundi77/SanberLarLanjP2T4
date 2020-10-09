@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('tasks', 'TaskController@index');
-Route::post('tasks/create', 'TaskController@create');
+Route::post('tasks/create', 'TaskController@store');
 Route::put('tasks/update', 'TaskController@update');
-Route::delete('tasks/delete', 'TaskController@delete');
+Route::delete('tasks/delete', 'TaskController@destroy');
