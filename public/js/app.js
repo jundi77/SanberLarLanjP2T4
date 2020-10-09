@@ -56,7 +56,7 @@ const app = new Vue({
                         response => {
                             response = response.body
                             if (response.hasOwnProperty('status')){
-                                this.toDo.data = this.toDo.data.splice(index,1)
+                                this.toDo.data.splice(index,1)
                             }
                         },
                         response => {
